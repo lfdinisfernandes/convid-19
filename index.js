@@ -5,7 +5,8 @@ const port = 3000
 
 app.get('/', async (req, res) => { 
    const response = await axios.get( "https://brasil.io/covid19/cities/cases/" )
-   res.send(JSON.stringify(response))
+   res.send(JSON.stringify(response.data))
+
 })
 
 
