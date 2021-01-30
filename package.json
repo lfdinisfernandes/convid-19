@@ -1,24 +1,23 @@
 {
   "name": "covid-19",
   "version": "1.0.0",
-  "description": "projeto",
-  "main": "cov-19.js",
-  "dependencies": {
-    "express-generator": "^4.16.1"
-  },
-  "devDependencies": {},
+  "description": "Projeto para busca de informações sobre o covid",
+  "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lfdinisfernandes/convid-19.git"
+    "url": "git+https://github.com/lfdinisfernandes/covid-19.git"
   },
-  "author": "Luiz-Felipe",
+  "author": "Luiz Felipe",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/lfdinisfernandes/convid-19/issues"
+    "url": "https://github.com/lfdinisfernandes/covid-19/issues"
   },
-  "homepage": "https://github.com/lfdinisfernandes/convid-19#readme"
+  "homepage": "https://github.com/lfdinisfernandes/covid-19#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
-
