@@ -1,2 +1,2 @@
 # covid-19
-meu primeiro teste
+Projeto para busca de informações sobre o covid
