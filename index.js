@@ -9,14 +9,20 @@ var db = mysql.createConnection({
   user: 'root',
   password: '',
   database: 'covid-19'
+
+  
 })
 
 db.connect()
 
 app.get('/covid/cidades', async (req, res) => {
-  var sql = `SELECT * FROM cadastros` 
- const response = await db.query(sql);
- console.log(response)
+  var sql = `SELECT * FROM cadastros`; 
+  db.query( sql, ( err, rows ) => {
+    console.log(rows);
+    res.send(JSON.stringify(rows));
+
+  } );
+ //console.log(response)
 // res.send(JSON.stringify(response));
 });
 
