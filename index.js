@@ -3,8 +3,10 @@ const axios = require('axios')
 const app = express()
 const mysql = require('mysql')
 const port = 3000
+app.use(express.json())
+app.use(express.urlencoded({extended: true}))
 
-var db = mysql.createConnection({
+  var db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: '',
@@ -15,36 +17,23 @@ var db = mysql.createConnection({
 
 db.connect()
 
-app.get('/covid/cidades', async (req, res) => {
+  app.get('/buscar/dados', async (req, res) => {
   var sql = `SELECT * FROM cadastros`; 
   await db.query( sql, ( err, rows ) => {
     console.log(rows);
     res.send(JSON.stringify(rows));
   
-  } );
+  });
 })
-app.get('/covid/busca', async (req, res) => {
-  var sql = `SELECT * FROM cadastros WHERE city LIKE "%${req.query.cidade}%"`;
+app.get('/covid/cidade', async (req, res) => {
+  var sql = `SELECT * FROM cadastros WHERE city LIKE "%${req.query.nome}%" OR id="${req.query.id}"`;
   await db.query( sql, ( err, rows ) => {
-  console.log(sql)
-  res.send(JSON.stringify(rows));
-  
-
-  } );
+   res.send(JSON.stringify(rows));
+  });
 })
-
-
-
-
-app.get('/preenche-banco', async (req, res) => {
-//   const conn = await connection(db).catch(e => {}) 
-   //const response = await axios.get( "https://brasil.io/covid19/cities/cases/" )
-   
-    const response = await axios.get( "https://run.mocky.io/v3/588727db-3fa7-4b45-9805-27676a34b00d" ) // 10 cidades
-  // const response = await axios.get( "  https://run.mocky.io/v3/95fe330b-5409-490b-ac01-35a70f26120a" )
-
-   
- 
+  
+  app.get('/preenche-dados', async (req, res) => {
+    const response = await axios.get( "https://brasil.io/covid19/cities/cases/" )     
    let values= ""
    Object.entries(response.data.cities).forEach(([key, val]) => {
      values += `( 
@@ -62,8 +51,7 @@ app.get('/preenche-banco', async (req, res) => {
      "${response.data.cities[key].state}"
      ),`
    })
-   var sql = `INSERT INTO cadastros 
-     
+   var sql = `INSERT INTO cadastros      
      (city,
       city_ibge_code,
       city_str,
@@ -82,13 +70,78 @@ app.get('/preenche-banco', async (req, res) => {
         
         res.send("dados inseridos")
       
-      } );
-      
-  
+      });
 })
 
-app.listen(port, () => {
+  app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
 
+  app.delete('/covid/cidade/:id', function(req, resp)  {
+  var sql = `DELETE FROM cadastros WHERE id = "${req.params.id}"`;
+  db.query( sql, ( err, rows ) => {
+    console.log(rows);
+    resp.send("dados deletado");
 
+} );
+})
+
+  app.post('/covid/cidade/', async (req, resp) => {
+    const values = 
+    `( 
+      "${req.body.city}",
+      "${req.body.city_ibge_code}",
+      "${req.body.city_str}",
+      "${req.body.confirmed}",
+      "${req.body.confirmed_per_100k_inhabitants}",
+      "${req.body.date}",
+      "${req.body.date_str}",
+      "${req.body.deaths}",
+      "${req.body.deaths_per_100k_inhabitants}",
+      "${req.body.death_rate_percent}",
+      "${req.body.estimated_population}",
+      "${req.body.state}"
+      )`
+  var sql = `INSERT INTO cadastros      
+   (city,
+    city_ibge_code,
+    city_str,
+    confirmed,
+    confirmed_per_100k_inhabitants,
+    date,
+    date_str,
+    deaths,
+    deaths_per_100k_inhabitants,
+    death_rate_percent,
+    estimated_population,
+    state )
+    VALUE ${values}`
+    
+      await db.query( sql, ( err, rows ) => {
+        console.log(err)
+        resp.send("Dados adicionados");
+    } );
+});
+
+app.put('/covid/cidade/:id', async (req, resp) => {
+  var sql = `
+  UPDATE cadastros
+  SET 
+  city = "${req.body.city}",
+  city_ibge_code = "${req.body.city_ibge_code}",
+  city_str = "${req.body.city_str}",
+  confirmed = "${req.body.confirmed}",
+  confirmed_per_100k_inhabitants = "${req.body.confirmed_per_100k_inhabitants}",
+  date = "${req.body.date}",
+  date_str = "${req.body.date_str}",
+  deaths = "${req.body.deaths}",
+  deaths_per_100k_inhabitants = "${req.body.deaths_per_100k_inhabitants}",
+  death_rate_percent = "${req.body.death_rate_percent}",
+  estimated_population = "${req.body.estimated_population}"
+  WHERE id = "${req.params.id}"`
+  console.log(sql)
+    await db.query( sql, ( err, rows ) => {
+      //console.log(err)
+      resp.send("Dados alterados");
+  } );
+});
