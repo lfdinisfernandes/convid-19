@@ -31,7 +31,7 @@ app.get('/covid/cidade', async (req, res) => {
    res.send(JSON.stringify(rows));
   });
 })
-  
+
   app.get('/preenche-dados', async (req, res) => {
     const response = await axios.get( "https://brasil.io/covid19/cities/cases/" )     
    let values= ""
