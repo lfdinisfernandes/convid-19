@@ -1,0 +1,1 @@
+SELECT * FROM `covid-19`.`banco` LIMIT 1000;
