@@ -10,7 +10,7 @@ router.get('/', async (req, res) => {
   //const response = await axios.get('https://brasil.io/covid19/cities/cases/');
   const response = await axios.get( "https://run.mocky.io/v3/588727db-3fa7-4b45-9805-27676a34b00d" ) // 10 cidades
   const cities =  response.data;
-  let values = '';
+  let values = ''; 
 
   Object.entries(response.data.cities).forEach(([key]) => {
     values += `( 
