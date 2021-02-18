@@ -1,5 +1,4 @@
 const express = require('express');
-
 const router = express.Router();
 
 router.use('/preenche-dados', require('./dados'));

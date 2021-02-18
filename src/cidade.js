@@ -1,16 +1,15 @@
 const express = require('express')
 const dib = require('./mysql/sql')
-
-var router = express.Router();
+const router = express.Router();
 
 router.get('/', async (req, res) => {
-  var sql = `SELECT * FROM cadastros WHERE city LIKE "%${req.query.nome}%" OR id="${req.query.id}"`;
+  const sql = `SELECT * FROM cadastros WHERE city LIKE "%${req.query.nome}%" OR id="${req.query.id}"`;
+  
   await db.query(sql, (err, rows) => {
     res.send(JSON.stringify(rows));
   });
 });
 router.post('/post', async (req, resp) => {
-  
   const values = `( 
       "${req.body.city}",
       "${req.body.city_ibge_code}",
@@ -39,12 +38,12 @@ router.post('/post', async (req, resp) => {
     estimated_population,
     state )
     VALUE ${values}`;
+
   await dib.db.query(sql, () => {
     resp.send('Dados adicionados');
   });
 });
 router.put('/put', async (req, resp) => {
-  
   const sql = `
     UPDATE cadastros
     SET 
@@ -65,14 +64,12 @@ router.put('/put', async (req, resp) => {
     resp.send('Dados alterados');
   });
 });
-router.delete('/', function (req, resp) {
+router.delete('/',  (req, resp) => {
   const sql = `DELETE FROM cadastros WHERE id = ${req.query.id}`;
 
-  
     dib.db.query(sql, () => {
       resp.send('dados deletado');
-    }); 
-  
+    });  
 });
 
 
